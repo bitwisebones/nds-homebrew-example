@@ -2,41 +2,29 @@
 
 #include <stdio.h>
 
-volatile int frame = 0;
+// git adds a nice header we can include to access the data
+// this has the same name as the image
+#include "cecil.h"
 
-//---------------------------------------------------------------------------------
-void Vblank() {
-//---------------------------------------------------------------------------------
-	frame++;
-}
-	
-//---------------------------------------------------------------------------------
-int main(void) {
-//---------------------------------------------------------------------------------
-	touchPosition touchXY;
-
-	irqSet(IRQ_VBLANK, Vblank);
+int main(void)
+{
+    // set the mode for 2 text layers and two extended background layers
+	videoSetMode(MODE_5_2D);
+    vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
 
 	consoleDemoInit();
 
-	iprintf("      Hello DS dev'rs\n");
-	iprintf("     \x1b[32mwww.devkitpro.org\n");
-	iprintf("   \x1b[32;1mwww.drunkencoders.com\x1b[39m");
- 
+	iprintf("\n\n\n\n\n\t\t\tBitwiseBones\n");
+
+	int bg3 = bgInit(3, BgType_Bmp8, BgSize_B8_256x256, 0,0);
+
+	dmaCopy(cecilBitmap, bgGetGfxPtr(bg3), 256*256);
+	dmaCopy(cecilPal, BG_PALETTE, 256*2);
+
 	while(1) {
-	
 		swiWaitForVBlank();
 		scanKeys();
-		int keys = keysDown();
-		if (keys & KEY_START) break;
-
-		touchRead(&touchXY);
-
-		// print at using ansi escape sequence \x1b[line;columnH 
-		iprintf("\x1b[10;0HFrame = %d",frame);
-		iprintf("\x1b[16;0HTouch x = %04X, %04X\n", touchXY.rawx, touchXY.px);
-		iprintf("Touch y = %04X, %04X\n", touchXY.rawy, touchXY.py);		
-	
+		if (keysDown()&KEY_START) break;
 	}
 
 	return 0;
