@@ -8,7 +8,7 @@
 
 int main(void)
 {
-    // set the mode for 2 text layers and two extended background layers
+	// set the mode for 2 text layers and two extended background layers
 	videoSetMode(MODE_5_2D);
 	vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
 
