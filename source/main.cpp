@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-// git adds a nice header we can include to access the data
+// grit adds a nice header we can include to access the data
 // this has the same name as the image
 #include "cecil.h"
 
